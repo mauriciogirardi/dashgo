@@ -1,30 +1,18 @@
-import { RiAddLine, RiPencilLine } from 'react-icons/ri'
-import {
-  Box,
-  Flex,
-  Text,
-  Button,
-  Icon,
-  Table,
-  Thead,
-  Tr,
-  Td,
-  Tbody,
-  Th,
-  Checkbox,
-  useBreakpointValue
-} from '@chakra-ui/react'
+import { Box, Flex, Text, Button, Icon, Spinner } from '@chakra-ui/react'
+import { RiAddLine } from 'react-icons/ri'
+import { useState } from 'react'
 import Link from 'next/link'
 
 import { Pagination } from 'components/Pagination'
-import { Header } from 'components/Header'
+import { useUsers } from 'services/hooks/useUsers'
 import { Sidebar } from 'components/Sidebar'
+import { Header } from 'components/Header'
+import { Table } from 'components/Table'
 
 export default function UsersList() {
-  const isWideVersion = useBreakpointValue({
-    base: false,
-    lg: true
-  })
+  const [page, setPage] = useState(1)
+
+  const { data, isLoading, isFetching, error } = useUsers(page)
 
   return (
     <Box>
@@ -37,6 +25,9 @@ export default function UsersList() {
           <Flex mb="8" justify="space-between" align="center">
             <Text fontSize="2xl" fontWeight="normal">
               Usuários
+              {!isLoading && isFetching && (
+                <Spinner ml="4" size="sm" color="gray.500" />
+              )}
             </Text>
 
             <Link href="/users/create" passHref>
@@ -52,54 +43,24 @@ export default function UsersList() {
             </Link>
           </Flex>
 
-          <Table colorScheme="whiteAlpha">
-            <Thead>
-              <Tr>
-                <Th px={['4', '4', '6']} color="gray.300" width="8">
-                  <Checkbox colorScheme="pink" />
-                </Th>
-                <Th>Usuário</Th>
-                {isWideVersion && <Th>Data de cadastro</Th>}
-                <Th></Th>
-              </Tr>
-            </Thead>
-
-            <Tbody>
-              <Tr>
-                <Td px={['4', '4', '6']}>
-                  <Checkbox colorScheme="pink" />
-                </Td>
-                <Td>
-                  <Box>
-                    <Text fontWeight="bold">Mauricio Girardi</Text>
-                    <Text color="gray.300" fontSize="sm">
-                      maurigirarde@yaho.com.br
-                    </Text>
-                  </Box>
-                </Td>
-                {isWideVersion && <Td>16 de Setembro, 2021</Td>}
-                <Td textAlign="right">
-                  <Button
-                    as="a"
-                    size="sm"
-                    variant="ghost"
-                    pr={isWideVersion ? '' : '0'}
-                    colorScheme="telegram"
-                    leftIcon={
-                      <Icon
-                        as={RiPencilLine}
-                        fontSize={isWideVersion ? '16' : '25'}
-                      />
-                    }
-                  >
-                    {isWideVersion && 'Editar'}
-                  </Button>
-                </Td>
-              </Tr>
-            </Tbody>
-          </Table>
-
-          <Pagination />
+          {isLoading ? (
+            <Flex justify="center">
+              <Spinner color="pink.500" />
+            </Flex>
+          ) : error ? (
+            <Flex>
+              <Text>Falha ao obter dados dos usuários.</Text>
+            </Flex>
+          ) : (
+            <>
+              <Table data={data?.users} />
+              <Pagination
+                totalCountRegister={data?.totalCount ?? 0}
+                currentPage={page}
+                onPageChange={setPage}
+              />
+            </>
+          )}
         </Box>
       </Flex>
     </Box>
