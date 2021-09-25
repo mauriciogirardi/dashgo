@@ -3,6 +3,7 @@ import Head from 'next/head'
 import { ChakraProvider } from '@chakra-ui/react'
 
 import { theme } from 'styles/theme'
+import { Providers } from 'hooks'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -10,7 +11,9 @@ export default function App({ Component, pageProps }: AppProps) {
       <Head>
         <title>dashgo</title>
       </Head>
-      <Component {...pageProps} />
+      <Providers>
+        <Component {...pageProps} />
+      </Providers>
     </ChakraProvider>
   )
 }

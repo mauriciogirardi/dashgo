@@ -1,26 +1,55 @@
-import { Flex } from '@chakra-ui/react'
+import { Flex, useBreakpointValue, IconButton, Icon } from '@chakra-ui/react'
 
 import { Logo } from './Logo'
 import { Profile } from './Profile'
-import { Notification } from './Notification'
+import { NotificationNav } from './NotificationNav'
 import { SearchInput } from './SearchInput'
-import { ContainerUi } from 'components/Ui'
+import { useSidebarDrawer } from 'hooks/useSidebarDrawer'
+import { RiMenuLine } from 'react-icons/ri'
 
 export function Header() {
+  const { onOpen } = useSidebarDrawer()
+
+  const isWideVersion = useBreakpointValue({
+    base: false,
+    lg: true
+  })
+
   return (
-    <ContainerUi>
+    <Flex
+      as="header"
+      maxW={1480}
+      w="100%"
+      h="20"
+      mx="auto"
+      mt="4"
+      px={['6', '4']}
+      align="center"
+    >
+      {!isWideVersion && (
+        <IconButton
+          aria-label="open navigation"
+          type="button"
+          mr="6"
+          onClick={onOpen}
+          variant="unstyled"
+          icon={<Icon as={RiMenuLine} fontSize="30" />}
+        />
+      )}
+
       <Logo />
-      <SearchInput />
+
+      {isWideVersion && <SearchInput />}
 
       <Flex align="center" ml="auto">
-        <Notification />
-
+        <NotificationNav />
         <Profile
           avatar="https://github.com/mauriciogirardi.png"
           name="Mauricio Girardi"
           email="maurigirarde@yahoo.com.br"
+          showProfileData={isWideVersion}
         />
       </Flex>
-    </ContainerUi>
+    </Flex>
   )
 }
