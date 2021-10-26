@@ -1,6 +1,7 @@
 import { RiLockLine, RiMailLine, RiUserLine } from 'react-icons/ri'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
+
 import { useMutation } from 'react-query'
 import { useRouter } from 'next/router'
 import {
@@ -15,11 +16,12 @@ import {
 } from '@chakra-ui/react'
 import * as yup from 'yup'
 
+import { withSSRAuth } from 'utils/withSSRAuth'
 import { useShowPassword } from 'hooks/useShowPassword'
 import { Sidebar } from 'components/Sidebar'
 import { Header } from 'components/Header'
 import { Input } from 'components/Form/Input'
-import { api } from 'services'
+import { api, setupApiClient } from 'services'
 import { queryClient } from 'services/queryClient'
 
 interface UserData {
@@ -159,3 +161,18 @@ export default function CreateUser() {
     </Box>
   )
 }
+
+export const getServerSideProps = withSSRAuth(
+  async (ctx) => {
+    const apiClient = setupApiClient(ctx)
+    const response = await apiClient.get('/me')
+
+    return {
+      props: {}
+    }
+  },
+  {
+    permissions: ['users.create'],
+    roles: ['administrator']
+  }
+)

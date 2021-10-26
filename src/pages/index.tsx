@@ -1,11 +1,13 @@
 import { RiLockFill, RiMailFill } from 'react-icons/ri'
-import { Flex, Button, Stack } from '@chakra-ui/react'
 import { useForm, SubmitHandler } from 'react-hook-form'
+import { Flex, Button, Stack } from '@chakra-ui/react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
-import { Input } from 'components/Form/Input'
 import { useShowPassword } from 'hooks/useShowPassword'
+import { useAuth } from 'context/AuthContext'
+import { Input } from 'components/Form/Input'
+import { withSSRGuest } from 'utils/withSSRGuest'
 
 interface SignInData {
   email: string
@@ -32,9 +34,16 @@ export default function SignIn() {
     resolver: yupResolver(signInFormSchema)
   })
 
-  const handleSignIn: SubmitHandler<SignInData> = async (data) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    console.log(data)
+  const { signIn, loading } = useAuth()
+
+  const handleSignIn: SubmitHandler<SignInData> = async ({
+    email,
+    password
+  }) => {
+    signIn({
+      password,
+      email
+    })
   }
 
   return (
@@ -70,7 +79,7 @@ export default function SignIn() {
         </Stack>
 
         <Button
-          isLoading={isSubmitting}
+          isLoading={isSubmitting || loading}
           type="submit"
           colorScheme="pink"
           size="lg"
@@ -82,3 +91,9 @@ export default function SignIn() {
     </Flex>
   )
 }
+
+export const getServerSideProps = withSSRGuest(async (ctx) => {
+  return {
+    props: {}
+  }
+})

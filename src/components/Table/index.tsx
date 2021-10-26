@@ -16,7 +16,7 @@ import {
 import { OverflowY } from './styles'
 
 interface User {
-  createdAt: string
+  created_at: string
   email: string
   id: string
   name: string
@@ -60,7 +60,7 @@ export function Table({ data }: TableProps) {
                   </Text>
                 </Box>
               </Td>
-              {isWideVersion && <Td>{item.createdAt}</Td>}
+              {isWideVersion && <Td>{item.created_at}</Td>}
               <Td textAlign="right">
                 <Button
                   as="a"

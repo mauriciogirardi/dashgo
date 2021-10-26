@@ -8,10 +8,11 @@ import Head from 'next/head'
 import { theme } from 'styles/theme'
 import { Providers } from 'hooks'
 import { queryClient } from 'services/queryClient'
+import { AuthProvider } from 'context/AuthContext'
 
-if (process.env.NODE_ENV === 'development') {
-  makeServer()
-}
+// if (process.env.NODE_ENV === 'development') {
+//   makeServer()
+// }
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -20,9 +21,11 @@ export default function App({ Component, pageProps }: AppProps) {
         <Head>
           <title>dashgo</title>
         </Head>
-        <Providers>
-          <Component {...pageProps} />
-        </Providers>
+        <AuthProvider>
+          <Providers>
+            <Component {...pageProps} />
+          </Providers>
+        </AuthProvider>
       </ChakraProvider>
 
       <ReactQueryDevtools />

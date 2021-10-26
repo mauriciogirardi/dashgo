@@ -6,9 +6,11 @@ import { NotificationNav } from './NotificationNav'
 import { SearchInput } from './SearchInput'
 import { useSidebarDrawer } from 'hooks/useSidebarDrawer'
 import { RiMenuLine } from 'react-icons/ri'
+import { useAuth } from 'context/AuthContext'
 
 export function Header() {
   const { onOpen } = useSidebarDrawer()
+  const { user } = useAuth()
 
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -46,7 +48,7 @@ export function Header() {
         <Profile
           avatar="https://github.com/mauriciogirardi.png"
           name="Mauricio Girardi"
-          email="maurigirarde@yahoo.com.br"
+          email={user?.email ?? ''}
           showProfileData={isWideVersion}
         />
       </Flex>

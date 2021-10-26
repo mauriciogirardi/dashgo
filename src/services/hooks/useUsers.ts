@@ -2,7 +2,7 @@ import { useQuery } from 'react-query'
 import { api } from 'services'
 
 interface User {
-  createdAt: string
+  created_at: string
   email: string
   id: string
   name: string
@@ -26,7 +26,7 @@ export async function getUsers(page: number): Promise<GetUserResponse> {
     id: user.id,
     email: user.email,
     name: user.name,
-    createdAt: new Date(user.createdAt).toLocaleDateString('pt-BR', {
+    created_at: new Date(user.created_at).toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: 'long',
       year: 'numeric'
